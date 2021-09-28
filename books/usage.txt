@@ -1,0 +1,36 @@
+NAME
+    find - search for entries within books.csv
+
+SYNOPSIS
+    find STRING
+    find [OPTION] STRING
+    find [OPTION] STRING... [OPTION] STRING
+    find [OPTION] STRING... [-y] NUM_START_YEAR NUM_END_YEAR    
+
+DESCRIPTION
+    find the book entries that contain all specified OPTIONS and display the result. Displayed result will be sorted by name followed by publication year.
+
+    -t, --title (DEFAULT)
+        print all book entries with title containing the specified string
+
+    -a, --author 
+        print all book entries with author's name containing the specified string 
+
+    -y, --year 
+        print all books published between NUM_START_YEAR and NUM_END_YEAR, inclusive.
+    
+    -h, --help
+        print this user manual
+
+    if multiple flags (-a, -t, -y) are detected, the program will ONLY print out entries that matches ALL provided options 
+
+        EXAMPLE:
+            % find -a "Right Ho, Jeeves" -t "Pelham Grenville Wodehouse" -y 1881 1975
+            |
+            |
+            |
+            "Right Ho, Jeeves",1934,Pelham Grenville Wodehouse (1881-1975)
+
+
+AUTHOR  
+    Written by Robbie Young and Thien K. M. Bui
