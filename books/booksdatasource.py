@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 '''
     booksdatasource.py
-    Jeff Ondich, 21 September 2021
+    Original author: Jeff Ondich, 21 September 2021
+    Modified by: Kevin Bui, Robbie Young
     For use in the "books" assignment at the beginning of Carleton's
     CS 257 Software Design class, Fall 2021.
 '''
@@ -35,6 +36,8 @@ class Book:
 
 class BooksDataSource:
     def __init__(self, books_csv_file_name):
+        self.authorsDict = {}
+        self.booksDict = {}
         ''' The books CSV file format looks like this:
                 title,publication_year,author_description
             For example:
@@ -44,7 +47,28 @@ class BooksDataSource:
             suitable instance variables for the BooksDataSource object containing
             a collection of Author objects and a collection of Book objects.
         '''
-        pass
+        with open(books_csv_file_name, newline='') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                tempMultipleAuthorList = row[2].split("and")
+                tempAuthorsList = []
+                for author in tempMultipleAuthorList:
+                    tempAuthor = author.split(" ")
+                    tempYearList = tempAuthor[-1].replace("(", "").replace(")", "").split("-")
+                    
+                    # We are assuming that everyone has only one first and one last name; any names in between the first and last name ommitted
+                    newAuthor = Author(tempAuthor[-2], tempAuthor[0], tempYearList[0], tempYearList[1])
+                    tempAuthorsList.append(newAuthor)
+                    if(not self.authorsDict.get(author, False) ):
+                        self.authorsDict[author] = newAuthor
+                newBook = Book(title=row[0], publication_year=row[1], authors=tempAuthorsList)
+                if(not self.booksDict.get(row[0], False)):
+                    self.booksDict[row[0]] = newBook
+                
+              
+                # Author(self, surname='', given_name='', birth_year=None, death_year=None)
+                # Book(self, title='', publication_year=None, authors=[])
+
 
     def authors(self, search_text=None):
         ''' Returns a list of all the Author objects in this data source whose names contain
@@ -77,3 +101,19 @@ class BooksDataSource:
             should be included.
         '''
         return []
+
+def main():
+    data_source = BooksDataSource("testBooks1.csv")
+    for author in data_source.authorsDict.keys():
+        print(data_source.authorsDict[author].surname)
+    
+    print(len(data_source.authorsDict.keys()), "Num Author")
+    print("=================================")
+    
+    for book in data_source.booksDict.keys():
+        print(data_source.booksDict[book].title)
+    
+    print(len(data_source.booksDict.keys()), "Num Books")
+
+if __name__ == "__main__":
+    main()
