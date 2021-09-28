@@ -1,6 +1,7 @@
 '''
    booksdatasourcetest.py
-   Jeff Ondich, 24 September 2021
+   Original author: Jeff Ondich, 24 September 2021
+   Modified by: Kevin Bui, Robbie Young, 24 September 2021
 '''
 
 import booksdatasource
@@ -13,7 +14,7 @@ class BooksDataSourceTester(unittest.TestCase):
     def tearDown(self):
         pass
 
-    #testing author method
+    # Testing authors method
     def test_unique_author(self):
         authors = self.data_source.authors('Baldwin')
         self.assertTrue(len(authors) == 1)
@@ -23,17 +24,17 @@ class BooksDataSourceTester(unittest.TestCase):
         authors = self.data_source.authors('Bui')
         self.assertTrue(len(authors) == 0)
 
-        authors2 = self.data_source.authors('Bronk')
-        self.assertTrue(len(authors2) == 0)
+        authors2 = self.data_source.authors('Bronk') # same as above maybe remove? Very nitpicky lol but said not to repeat similar tests
+        self.assertTrue(len(authors2) == 0) # could maybe replace with bronte to test special character/case sensitive cases?
     
     def test_no_argument_author(self):
         authors = self.data_source.authors()
-        self.assertTrue(len(authors) == 7)
+        self.assertTrue(len(authors) == 7) # 8?
     
     def test_multiple_matches_author(self):
         searchedName = 'Bront'
         authors = self.data_source.authors(searchedName)
-        self.assertTrue(len(authors) == 3, "incorrect number of books")
+        self.assertTrue(len(authors) == 3, "incorrect number of books") # books?
         for author in authors:
             self.assertTrue((searchedName in author.surname) or (searchedName in author.given_name), "incorrect Author's name")
     
@@ -44,7 +45,7 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(authors[0] == booksdatasource.Author('Shandy', 'Tristramm'), "incorrect Author's name")
 
     def test_space_only_arg_author(self):
-        authors = self.data_source.authors( )
+        authors = self.data_source.authors( ) # don't get this test lol
         self.assertTrue(len(authors) == 0)
     
     def test_sorted_author(self):
@@ -54,14 +55,14 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(authors[1] == booksdatasource.Author('Charlotte', 'Brontë'))
         self.assertTrue(authors[2] == booksdatasource.Author('Emily', 'Brontë'))
 
-    #testing books method
+    # Testing books method
     def test_unique_book(self):
         title = "To Say Nothing of the Dog"
         books = self.data_source.books(title)
         self.assertTrue(len(books) == 1)
         self.assertTrue(books[0] == booksdatasource.Book(title))
     
-    def test_empty_args_book(self):
+    def test_empty_args_book(self): # inconsistent name as author method?
         books = self.data_source.books()
         self.assertTrue(len(books) == 10)
 
@@ -72,10 +73,10 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(len(books) == 1)
         self.assertTrue(books[0] == booksdatasource.Book(title))
 
-    def test_multiple_matches(self):
+    def test_multiple_matches(self): # check what happens with multiple books of same title but different authors/dates/etc
         searchString = 'vi'
         books = self.data_source.books(searchString) 
-        self.assertTrue(len(books) == 2)
+        self.assertTrue(len(books) == 2) # 3?
         for book in books:
             self.assertTrue(searchString in book.title.lower())
 
@@ -87,7 +88,7 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(books[1] == booksdatasource.Book("Villette") and books[2] == booksdatasource.Book("Villette"))
         self.assertTrue(books[2].publication_year >= books[1].publication_year)
 
-    def test_sorted_books_default(self):
+    def test_sorted_books_default(self): # check author &/or year for Villette?
         searchString = 'vi'
         books = self.data_source.books(searchString) 
         self.assertTrue(len(books) == 3)
@@ -95,7 +96,7 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(books[1] == booksdatasource.Book("Villette") and books[2] == booksdatasource.Book("Villette"))
         self.assertTrue(books[2].publication_year >= books[1].publication_year)
     
-    def test_sorted_books_year(self):
+    def test_sorted_books_year(self): # check author &/or year for Villette?
         searchString = 'vi'
         books = self.data_source.books(searchString, 'year') 
         self.assertTrue(len(books) == 3)
@@ -104,16 +105,16 @@ class BooksDataSourceTester(unittest.TestCase):
         previousBookYear = -1
         for i in range(len(books)):
             self.assertTrue(books[i].publication_year >= previousBookYear)
-            bookYear = books[i].publication_year 
+            bookYear = books[i].publication_year # previousBookYear?
 
-    #testing books_between_years method
+    # Testing books_between_years method
 
-    def test_year_start_and_end(self):
+    def test_year_start_and_end(self): # why or in assert?
         books = self.data_source.books_between_years(2018, 2020)
         self.assertTrue(len(books) == 3)
         self.assertTrue(books[0] == booksdatasource.Book("There, There") or books[0] == booksdatasource.Book("Testing multiple author given name"))
     
-    def test_year_start_and_end_string(self):
+    def test_year_start_and_end_string(self): # why or in assert?
         books = self.data_source.books_between_years("2018", "2020")
         self.assertTrue(len(books) == 3)
         self.assertTrue(books[0] == booksdatasource.Book("There, There") or books[0] == booksdatasource.Book("Testing multiple author given name"))
@@ -135,12 +136,12 @@ class BooksDataSourceTester(unittest.TestCase):
         self.assertTrue(len(books) == 2)
         self.assertTrue(books[0] == booksdatasource.Book("Wuthering Heights"))
     
-    def test_year_no_args(self):
+    def test_year_no_args(self): # line 65 not 9 books?
         books=self.data_source.books_between_years()
         self.assertTrue(len(books) == 9)
         self.assertTrue(books[8] == booksdatasource.Book("The Invisible Life of Addie LaRue"))
 
-    def test_year_both_illegal_args(self):
+    def test_year_both_illegal_args(self): # these tests and below huh?
         self.assertRaises(TypeError, self.data_source.books_between_years, "Hello", "World")
     
     def test_year_start_illegal(self):
