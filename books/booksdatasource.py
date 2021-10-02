@@ -85,16 +85,13 @@ class BooksDataSource:
             return sorted(self.authorsList, key=lambda author: author.surname + author.given_name)
         else:
             filteredAuthors = []
+            search_text = search_text.lower()
             for author in self.authorsList:
-                if (search_text in author.surname + author.given_name) or (search_text in author.given_name + author.surname):
+                if (search_text in author.surname.lower() + " " + author.given_name.lower()) or (search_text in author.given_name.lower() + " " + author.surname.lower()):
                     filteredAuthors.append(author)
             
             return sorted(filteredAuthors, key=lambda author: author.surname + author.given_name)
       
-
-
-
-
 
 
     def books(self, search_text=None, sort_by='title'):
@@ -107,7 +104,31 @@ class BooksDataSource:
                 default -- same as 'title' (that is, if sort_by is anything other than 'year'
                             or 'title', just do the same thing you would do for 'title')
         '''
-        return []
+        # sort by alphabetical order
+        if (sort_by=='title'):
+            if(search_text == None):
+                return sorted(self.booksList, key=lambda book: book.title)
+            else:
+                filteredBooks = []
+                search_text = search_text.lower()
+                for book in self.booksList:
+                    if (search_text in book.title.lower()):
+                        filteredBooks.append(book)
+                
+                return sorted(filteredBooks, key=lambda book: book.title)
+
+        # sort by year
+        else:
+            if(search_text == None):
+                return sorted(self.booksList, key=lambda book: book.publication_year)
+            else:
+                filteredBooks = []
+                search_text = search_text.lower()
+                for book in self.booksList:
+                    if (search_text in book.title.lower()):
+                        filteredBooks.append(book)
+                
+                return sorted(filteredBooks, key=lambda book: book.publication_year)
 
     def books_between_years(self, start_year=None, end_year=None):
         ''' Returns a list of all the Book objects in this data source whose publication
@@ -119,7 +140,27 @@ class BooksDataSource:
             during start_year should be included. If both are None, then all books
             should be included.
         '''
-        return []
+        filteredBooks = []
+        if (start_year==None and end_year==None):
+            return sorted(self.booksList, key=lambda book: book.publication_year + book.title)
+
+        elif (start_year!=None and end_year==None):
+            for book in self.booksList:
+                if (int(book.publication_year) >= start_year):
+                    filteredBooks.append(book)
+            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
+
+        elif (start_year==None and end_year!=None):
+            for book in self.booksList:
+                if (int(book.publication_year) <= end_year):
+                    filteredBooks.append(book)
+            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
+
+        else:
+            for book in self.booksList:
+                if (int(book.publication_year) >= int(start_year) and int(book.publication_year) <= int(end_year)):
+                    filteredBooks.append(book)
+            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
 
 def main():
     data_source = BooksDataSource("testBooks1.csv")
