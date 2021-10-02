@@ -36,8 +36,8 @@ class Book:
 
 class BooksDataSource:
     def __init__(self, books_csv_file_name):
-        self.authorsDict = {}
-        self.booksDict = {}
+        self.authorsList = []
+        self.booksList = []
         ''' The books CSV file format looks like this:
                 title,publication_year,author_description
             For example:
@@ -48,35 +48,54 @@ class BooksDataSource:
             a collection of Author objects and a collection of Book objects.
         '''
         with open(books_csv_file_name, newline='') as csvfile:
+            #these dictionaries are only used to quickly filter out repeating books/authors based on title/name
+            tempAuthorsDict = {}
+            tempBooksDict = {}
+
             reader = csv.reader(csvfile)
             for row in reader:
                 tempMultipleAuthorList = row[2].split("and")
-                tempAuthorsList = []
+                thisBooksAuthors = []
                 for author in tempMultipleAuthorList:
                     tempAuthor = author.split(" ")
                     tempYearList = tempAuthor[-1].replace("(", "").replace(")", "").split("-")
                     
                     # We are assuming that everyone has only one first and one last name; any names in between the first and last name ommitted
                     newAuthor = Author(tempAuthor[-2], tempAuthor[0], tempYearList[0], tempYearList[1])
-                    tempAuthorsList.append(newAuthor)
-                    if(not self.authorsDict.get(author, False) ):
-                        self.authorsDict[author] = newAuthor
-                newBook = Book(title=row[0], publication_year=row[1], authors=tempAuthorsList)
-                if(not self.booksDict.get(row[0], False)):
-                    self.booksDict[row[0]] = newBook
-                
-              
-                # Author(self, surname='', given_name='', birth_year=None, death_year=None)
-                # Book(self, title='', publication_year=None, authors=[])
+                    thisBooksAuthors.append(newAuthor)
+                    if(not tempAuthorsDict.get(author, False) ):
+                        tempAuthorsDict[author] = newAuthor
 
-
+                #if there are 2 books with the same title but different years + authors, we are assuming they're the exact same book thus we're only adding it in once. The FIRST occurrence of such books with this unique title will be added.
+                newBook = Book(title=row[0], publication_year=row[1], authors=thisBooksAuthors)
+                if(not tempBooksDict.get(row[0], False)):
+                    tempBooksDict[row[0]] = newBook
+            
+            self.authorsList = tempAuthorsDict.values()
+            self.booksList = tempBooksDict.values()
+        
+    
     def authors(self, search_text=None):
         ''' Returns a list of all the Author objects in this data source whose names contain
             (case-insensitively) the search text. If search_text is None, then this method
             returns all of the Author objects. In either case, the returned list is sorted
             by surname, breaking ties using given name (e.g. Ann Brontë comes before Charlotte Brontë).
         '''
-        return []
+        if(search_text == None):
+            return sorted(self.authorsList, key=lambda author: author.surname + author.given_name)
+        else:
+            filteredAuthors = []
+            for author in self.authorsList:
+                if (search_text in author.surname + author.given_name) or (search_text in author.given_name + author.surname):
+                    filteredAuthors.append(author)
+            
+            return sorted(filteredAuthors, key=lambda author: author.surname + author.given_name)
+      
+
+
+
+
+
 
     def books(self, search_text=None, sort_by='title'):
         ''' Returns a list of all the Book objects in this data source whose
@@ -104,16 +123,28 @@ class BooksDataSource:
 
 def main():
     data_source = BooksDataSource("testBooks1.csv")
-    for author in data_source.authorsDict.keys():
-        print(data_source.authorsDict[author].surname)
+    tempAuthorsDict = data_source.authors()
+    for author in tempAuthorsDict:
+        print(author.surname, author.given_name)
+
+    testString = "Ubi"
+
+    print("Bui" in testString)
+    # testString = "Brontë"
+    # print( in testString)
     
-    print(len(data_source.authorsDict.keys()), "Num Author")
-    print("=================================")
+    # for author in data_source.tempAuthorsDict:
+    #     print(author.surname)
     
-    for book in data_source.booksDict.keys():
-        print(data_source.booksDict[book].title)
+    # print(len(data_source.tempAuthorsDict), "Num Author")
+    # print("=================================")
     
-    print(len(data_source.booksDict.keys()), "Num Books")
+    # for book in data_source.tempBooksDict:
+    #     print(book.title)
+    
+    # print(len(data_source.tempBooksDict), "Num Books")
 
 if __name__ == "__main__":
     main()
+
+    
