@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 '''
     booksdatasource.py
-    Original author: Jeff Ondich, 21 September 2021
-    Modified by: Kevin Bui, Robbie Young
+    Original author: Jeff Ondich, 24 September 2021
+    Modified by: Kevin Bui, Robbie Young, 2 October 2021
     For use in the "books" assignment at the beginning of Carleton's
     CS 257 Software Design class, Fall 2021.
 '''
@@ -161,31 +161,3 @@ class BooksDataSource:
                 if (int(book.publication_year) >= int(start_year) and int(book.publication_year) <= int(end_year)):
                     filteredBooks.append(book)
             return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
-
-def main():
-    data_source = BooksDataSource("testBooks1.csv")
-    tempAuthorsDict = data_source.authors()
-    for author in tempAuthorsDict:
-        print(author.surname, author.given_name)
-
-    testString = "Ubi"
-
-    print("Bui" in testString)
-    # testString = "Brontë"
-    # print( in testString)
-    
-    # for author in data_source.tempAuthorsDict:
-    #     print(author.surname)
-    
-    # print(len(data_source.tempAuthorsDict), "Num Author")
-    # print("=================================")
-    
-    # for book in data_source.tempBooksDict:
-    #     print(book.title)
-    
-    # print(len(data_source.tempBooksDict), "Num Books")
-
-if __name__ == "__main__":
-    main()
-
-    

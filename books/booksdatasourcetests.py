@@ -1,7 +1,9 @@
 '''
-   booksdatasourcetest.py
-   Original author: Jeff Ondich, 24 September 2021
-   Modified by: Kevin Bui, Robbie Young, 27 September 2021
+    booksdatasourcetest.py
+    Original author: Jeff Ondich, 24 September 2021
+    Modified by: Kevin Bui, Robbie Young, 2 October 2021
+    For use in the "books" assignment at the beginning of Carleton's
+    CS 257 Software Design class, Fall 2021.
 '''
 
 import booksdatasource
@@ -132,8 +134,6 @@ class BooksDataSourceTester(unittest.TestCase):
     
     def test_year_end_only(self):
         books = self.data_source.books_between_years(end_year=1855)
-        for book in books:
-            print(book.publication_year)
         self.assertTrue(len(books) == 4)
         self.assertTrue(books[0] == booksdatasource.Book("The Life and Opinions of Tristram Shandy, Gentleman"))
     
@@ -141,21 +141,7 @@ class BooksDataSourceTester(unittest.TestCase):
         books=self.data_source.books_between_years()
         self.assertTrue(len(books) == 10)
         self.assertTrue(books[9] == booksdatasource.Book("The Invisible Life of Addie LaRue"))
-
-    # def test_year_both_illegal_args(self): 
-    #     self.assertRaises(TypeError, self.data_source.books_between_years, "Hello", "World")
-    
-    # def test_year_start_illegal(self):
-    #     self.assertRaises(TypeError, self.data_source.books_between_years, "Hello")
-
-    # def test_year_end_illegal(self):
-    #     self.assertRaises(TypeError, self.data_source.books_between_years, end_year="World")
-
-    # def test_year_only_end_illegal(self):
-    #     self.assertRaises(TypeError, self.data_source.books_between_years, 1900, "Hello")    
-
-
+ 
 
 if __name__ == '__main__':
     unittest.main()
-
