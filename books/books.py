@@ -45,6 +45,7 @@ def main():
     else:
         raise Exception('No search parameter provided, use -h for usage')
     
+    #
     if (not arguments.author == None):
         #sorting the bookList to be in alphabetical order in case the title flag is missing
         dataSet.books()
