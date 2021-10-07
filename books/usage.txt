@@ -33,7 +33,7 @@ DESCRIPTION
         print all books published before end_year, inclusive.
     
     -h, --help
-        print usage statement
+        If this flag is found, the program will not run and instead only print usage statement
     
 
     if multiple flags (-a, -t, -y) are detected, the program will ONLY print out entries that matches ALL provided options 
