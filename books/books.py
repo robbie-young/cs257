@@ -16,6 +16,7 @@ def get_parsed_arguments():
     parser.add_argument('--author', '-a')
     parser.add_argument('--start_year', '-s', type=int, nargs='?')
     parser.add_argument('--end_year', '-e', type=int, nargs='?')
+    parser.add_argument('--order', '-o', default='title', action='store_true')
 
     parser.add_argument('-h', '--help', action='store_true')
 
@@ -44,11 +45,11 @@ def main():
     if (arguments.author != None):
         data_set.authors_list = data_set.authors(arguments.author)
     if (arguments.title != None):
-        data_set.books_list = data_set.books(arguments.title)
+        data_set.books_list = data_set.books(arguments.title, arguments.order)
 
     if (arguments.author != None):
         #sorting the bookList to be in alphabetical order in case the title flag is missing
-        data_set.books()
+        data_set.books(sort_by = arguments.order)
         for author in data_set.authors_list:
             author.print_author()
             for book in data_set.books_list:
