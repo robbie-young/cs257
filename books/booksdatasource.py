@@ -19,6 +19,11 @@ class Author:
     def __eq__(self, other):
         ''' For simplicity, we're going to assume that no two authors have the same name. '''
         return self.surname == other.surname and self.given_name == other.given_name
+    
+    def print_author(self):
+        #sorting the book_list to be in alphabetical order in case the title flag is missing
+        author_string = self.surname + ' ' + self.given_name + ', ' + self.birth_year + '-' + self.death_year
+        print(author_string)
 
 class Book:
     def __init__(self, title='', publication_year=None, authors=[]):
@@ -33,11 +38,17 @@ class Book:
             no two books have the same title, so "same title" is the same
             thing as "same book". '''
         return self.title == other.title
+    
+    def print_book(self):
+        author_string = ''
+        for author in self.authors:
+            author_string = author_string + author.surname +' '+ author.given_name + ', '
+        print('=== ' + self.title + ' (' + self.publication_year + '), ' + 'by ' + author_string)
 
 class BooksDataSource:
     def __init__(self, books_csv_file_name):
-        self.authorsList = []
-        self.booksList = []
+        self.authors_list = []
+        self.books_list = []
         ''' The books CSV file format looks like this:
                 title,publication_year,author_description
             For example:
@@ -47,33 +58,38 @@ class BooksDataSource:
             suitable instance variables for the BooksDataSource object containing
             a collection of Author objects and a collection of Book objects.
         '''
-        with open(books_csv_file_name, newline='') as csvfile:
+        with open(books_csv_file_name, newline='') as csv_file:
             #these dictionaries are only used to quickly filter out repeating books/authors based on title/name
-            tempAuthorsDict = {}
-            tempBooksDict = {}
+            temp_authors_dict = {}
+            temp_books_dict = {}
 
-            reader = csv.reader(csvfile)
+            reader = csv.reader(csv_file)
             for row in reader:
-                tempMultipleAuthorList = row[2].split("and")
-                thisBooksAuthors = []
-                for author in tempMultipleAuthorList:
-                    tempAuthor = author.split(" ")
-                    tempYearList = tempAuthor[-1].replace("(", "").replace(")", "").split("-")
-                    
-                    # We are assuming that everyone has only one first and one last name; any names in between the first and last name ommitted
-                    newAuthor = Author(tempAuthor[-2], tempAuthor[0], tempYearList[0], tempYearList[1])
-                    thisBooksAuthors.append(newAuthor)
-                    if(not tempAuthorsDict.get(author, False) ):
-                        tempAuthorsDict[author] = newAuthor
+                temp_multiple_authors_list = row[2].split('and')
+                this_books_authors = []
+                for author in temp_multiple_authors_list:
+                    temp_author = author.split(" ")
+                    temp_year_list = temp_author[-1].replace("(", "").replace(")", "").split("-")
+
+                    # We are assuming there is only one first name and all other names are stored as a surname
+                    surname_list = temp_author[1:-1]
+                    surname_string = ''
+                    for surname in surname_list:
+                        surname_string = surname_string + " " + surname
+                        
+                    #we know the first char is going to be a space, so just remove it with 1:-1 substr op  
+                    new_author = Author(surname_string[1:], temp_author[0], temp_year_list[0], temp_year_list[1])
+                    this_books_authors.append(new_author)
+                    if(not temp_authors_dict.get(author, False)):
+                        temp_authors_dict[author] = new_author
 
                 #if there are 2 books with the same title but different years + authors, we are assuming they're the exact same book thus we're only adding it in once. The FIRST occurrence of such books with this unique title will be added.
-                newBook = Book(title=row[0], publication_year=row[1], authors=thisBooksAuthors)
-                if(not tempBooksDict.get(row[0], False)):
-                    tempBooksDict[row[0]] = newBook
+                newBook = Book(title=row[0], publication_year=row[1], authors=this_books_authors)
+                if(not temp_books_dict.get(row[0], False)):
+                    temp_books_dict[row[0]] = newBook
             
-            self.authorsList = tempAuthorsDict.values()
-            self.booksList = tempBooksDict.values()
-        
+            self.authors_list = temp_authors_dict.values()
+            self.books_list = temp_books_dict.values()
     
     def authors(self, search_text=None):
         ''' Returns a list of all the Author objects in this data source whose names contain
@@ -82,15 +98,15 @@ class BooksDataSource:
             by surname, breaking ties using given name (e.g. Ann Brontë comes before Charlotte Brontë).
         '''
         if(search_text == None):
-            return sorted(self.authorsList, key=lambda author: author.surname + author.given_name)
+            return sorted(self.authors_list, key=lambda author: author.surname + author.given_name)
         else:
-            filteredAuthors = []
+            filtered_authors = []
             search_text = search_text.lower()
-            for author in self.authorsList:
+            for author in self.authors_list:
                 if (search_text in author.surname.lower() + " " + author.given_name.lower()) or (search_text in author.given_name.lower() + " " + author.surname.lower()):
-                    filteredAuthors.append(author)
+                    filtered_authors.append(author)
             
-            return sorted(filteredAuthors, key=lambda author: author.surname + author.given_name)
+            return sorted(filtered_authors, key=lambda author: author.surname + author.given_name)
       
 
 
@@ -107,28 +123,28 @@ class BooksDataSource:
         # sort by alphabetical order
         if (sort_by=='title'):
             if(search_text == None):
-                return sorted(self.booksList, key=lambda book: book.title)
+                return sorted(self.books_list, key=lambda book: book.title)
             else:
-                filteredBooks = []
+                filtered_books = []
                 search_text = search_text.lower()
-                for book in self.booksList:
+                for book in self.books_list:
                     if (search_text in book.title.lower()):
-                        filteredBooks.append(book)
+                        filtered_books.append(book)
                 
-                return sorted(filteredBooks, key=lambda book: book.title)
+                return sorted(filtered_books, key=lambda book: book.title)
 
         # sort by year
         else:
             if(search_text == None):
-                return sorted(self.booksList, key=lambda book: book.publication_year)
+                return sorted(self.books_list, key=lambda book: book.publication_year)
             else:
-                filteredBooks = []
+                filtered_books = []
                 search_text = search_text.lower()
-                for book in self.booksList:
+                for book in self.books_list:
                     if (search_text in book.title.lower()):
-                        filteredBooks.append(book)
+                        filtered_books.append(book)
                 
-                return sorted(filteredBooks, key=lambda book: book.publication_year)
+                return sorted(filtered_books, key=lambda book: book.publication_year)
 
     def books_between_years(self, start_year=None, end_year=None):
         ''' Returns a list of all the Book objects in this data source whose publication
@@ -140,24 +156,24 @@ class BooksDataSource:
             during start_year should be included. If both are None, then all books
             should be included.
         '''
-        filteredBooks = []
+        filtered_books = []
         if (start_year==None and end_year==None):
-            return sorted(self.booksList, key=lambda book: book.publication_year + book.title)
+            return sorted(self.books_list, key=lambda book: book.publication_year + book.title)
 
         elif (start_year!=None and end_year==None):
-            for book in self.booksList:
+            for book in self.books_list:
                 if (int(book.publication_year) >= start_year):
-                    filteredBooks.append(book)
-            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
+                    filtered_books.append(book)
+            return sorted(filtered_books, key=lambda book: book.publication_year + book.title)
 
         elif (start_year==None and end_year!=None):
-            for book in self.booksList:
+            for book in self.books_list:
                 if (int(book.publication_year) <= end_year):
-                    filteredBooks.append(book)
-            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
+                    filtered_books.append(book)
+            return sorted(filtered_books, key=lambda book: book.publication_year + book.title)
 
         else:
-            for book in self.booksList:
+            for book in self.books_list:
                 if (int(book.publication_year) >= int(start_year) and int(book.publication_year) <= int(end_year)):
-                    filteredBooks.append(book)
-            return sorted(filteredBooks, key=lambda book: book.publication_year + book.title)
+                    filtered_books.append(book)
+            return sorted(filtered_books, key=lambda book: book.publication_year + book.title)

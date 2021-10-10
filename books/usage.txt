@@ -31,9 +31,12 @@ DESCRIPTION
 
     -e, --end_year 
         print all books published before end_year, inclusive.
+
+    -o, --order
+	Changes the printing order of books to be sorted by year regardless of any other detected flags. No additional parameters/strings are to be used after flag
     
     -h, --help
-        print usage statement
+        If this flag is found, the program will not run and instead only print usage statement
     
 
     if multiple flags (-a, -t, -y) are detected, the program will ONLY print out entries that matches ALL provided options 
