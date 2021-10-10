@@ -16,7 +16,7 @@ def get_parsed_arguments():
     parser.add_argument('--author', '-a')
     parser.add_argument('--start_year', '-s', type=int, nargs='?')
     parser.add_argument('--end_year', '-e', type=int, nargs='?')
-    parser.add_argument('--order', '-o', default='title', action='store_true')
+    parser.add_argument('--by_year', '-Y', default='title', action='store_true')
 
     parser.add_argument('-h', '--help', action='store_true')
 
@@ -31,6 +31,7 @@ def main():
     # load the file
     data_set = booksdatasource.BooksDataSource(arguments.filename)
 
+    #print help statement
     if arguments.help:
         file = open('usage.txt', 'r')
         content = file.read()
@@ -38,18 +39,22 @@ def main():
         file.close()
         exit()
 
-    if(arguments.start_year != None):
+    if(arguments.start_year is not  None):
         data_set.books_list = data_set.books_between_years(start_year=arguments.start_year)
-    if(arguments.end_year != None):
-        data_set.books_list = data_set.books_between_years(end_year=arguments.end_year)
-    if (arguments.author != None):
-        data_set.authors_list = data_set.authors(arguments.author)
-    if (arguments.title != None):
-        data_set.books_list = data_set.books(arguments.title, arguments.order)
 
-    if (arguments.author != None):
-        #sorting the bookList to be in alphabetical order in case the title flag is missing
-        data_set.books(sort_by = arguments.order)
+    if(arguments.end_year is not None):
+        data_set.books_list = data_set.books_between_years(end_year=arguments.end_year)
+
+    if (arguments.author is not None):
+        data_set.authors_list = data_set.authors(arguments.author)
+
+    if (arguments.title is not None):
+        data_set.books_list = data_set.books(arguments.title)
+
+
+    if (arguments.author is not None):
+        #sorting the bookList to be in order in case the title flag is missing
+        data_set.books_list = data_set.books(sort_by = arguments.by_year)
         for author in data_set.authors_list:
             author.print_author()
             for book in data_set.books_list:
@@ -58,6 +63,8 @@ def main():
                         book.print_book()
     
     else:
+        #sorting the book_list so that the display is always consistent with the flag
+        data_set.books_list = data_set.books(sort_by = arguments.by_year)
         for book in data_set.books_list:
             book.print_book()
 

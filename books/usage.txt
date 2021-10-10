@@ -15,7 +15,13 @@ DESCRIPTION
             |
             |
             |
-            "Right Ho, Jeeves",1934,Pelham Grenville Wodehouse (1881-1975)
+            Pelham Grenville Wodehouse, 1881-1975
+            === Right Ho, Jeeves (1934) by Pelham Grenville Wodehouse,
+
+    NOTE:
+        ALL books displayed will be alphabetically sorted by title unless [-Y] or [--by_year] flag is specified.
+
+        ALL authors displayed will be alphabetically sorted by Surname, breaking ties by given name.
 
     -f, --filename
 	load data into the dataset from filename.
@@ -32,8 +38,11 @@ DESCRIPTION
     -e, --end_year 
         print all books published before end_year, inclusive.
 
-    -o, --order
-	Changes the printing order of books to be sorted by year regardless of any other detected flags. No additional parameters/strings are to be used after flag
+    -Y, --by_year
+	    Changes the printing order of books to be sorted by year regardless of any other detected flags. No additional parameters/strings are to be used after flag. 
+
+        NOTE: 
+        this flag ONLY work for displayed books, perhaps in a future update we will add sorted by author's death year.
     
     -h, --help
         If this flag is found, the program will not run and instead only print usage statement

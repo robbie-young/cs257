@@ -21,7 +21,6 @@ class Author:
         return self.surname == other.surname and self.given_name == other.given_name
     
     def print_author(self):
-        #sorting the book_list to be in alphabetical order in case the title flag is missing
         author_string = self.surname + ' ' + self.given_name + ', ' + self.birth_year + '-' + self.death_year
         print(author_string)
 
@@ -43,7 +42,8 @@ class Book:
         author_string = ''
         for author in self.authors:
             author_string = author_string + author.surname +' '+ author.given_name + ', '
-        print('=== ' + self.title + ' (' + self.publication_year + '), ' + 'by ' + author_string)
+        book_string = '=== ' + self.title + ' (' + self.publication_year + '), ' + 'by ' 
+        print(book_string + author_string)
 
 class BooksDataSource:
     def __init__(self, books_csv_file_name):
@@ -80,6 +80,8 @@ class BooksDataSource:
                     #we know the first char is going to be a space, so just remove it with 1:-1 substr op  
                     new_author = Author(surname_string[1:], temp_author[0], temp_year_list[0], temp_year_list[1])
                     this_books_authors.append(new_author)
+                    
+                    #if there are 2 authors with the same surname and lastname, we are assuming they're the exact same person even if they were born/died on different years and thus only adding them in once. The FIRST occurrence of such author with this surname and given name will be added.
                     if(not temp_authors_dict.get(author, False)):
                         temp_authors_dict[author] = new_author
 
