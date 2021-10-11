@@ -1,6 +1,6 @@
 '''
     books.py
-    Authors: Kevin Bui, Robbie Young, 7 October 2021
+    Authors: Kevin Bui, Robbie Young, 10 October 2021
     For use in the "books" assignment at the beginning of Carleton's
     CS 257 Software Design class, Fall 2021.
 '''
