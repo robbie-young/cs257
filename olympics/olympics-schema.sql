@@ -1,40 +1,46 @@
 CREATE TABLE athletes(
     id SERIAL,
-    athlete_sex TEXT,
-    athlete_age INT,
-    athlete_height INT,
-    weight INT,
-    athlete_name_id INT
+    name_id INT,
+    sex TEXT,
+    age INT,
+    height FLOAT,
+    weight FLOAT
 );
 
 CREATE TABLE athlete_names(
     id SERIAL,
-    athlete_name TEXT
+    name TEXT
 );
 
 CREATE TABLE noc_regions(
     id SERIAL,
     team_name TEXT,
-    noc_region TEXT
+    noc TEXT,
+    region TEXT
 );
 
 CREATE TABLE games(
     id SERIAL,
     title TEXT,
     year INT,
-    season TEXT,
+    season_id TEXT,
     city TEXT
+);
+
+CREATE TABLE seasons(
+    id SERIAL,
+    season TEXT
 );
 
 CREATE TABLE events(
     id SERIAL,
-    sport TEXT,
-    event_name_id INT
+    event TEXT,
+    sport_id INT
 );
 
 CREATE TABLE event_names(
     id SERIAL,
-    event_name TEXT
+    event TEXT
 );
 
 CREATE TABLE medals(
