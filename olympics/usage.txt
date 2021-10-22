@@ -1,0 +1,32 @@
+
+NAME
+    python3 olympics.py - queries the olympics database
+
+SYNOPSIS
+    python3 olympics.py <OPTION> [STRING]
+
+
+DESCRIPTION
+	Queries the olympics database printing various results, dependent on the flags described below. Note that only one flag can be used at once and some flags may require an additional string following the flag.
+
+	Important Note:
+	a config.py file must be provided; please update all fields with appropriate		information
+
+	-h, --help
+	prints usage statement
+
+	-n, --names
+	lists all names of athletes from the specified NOC. Additional NOC search string is required along with flag
+
+	-g, --gold
+	lists all NOCs and the number of gold medals won, printed in decreasing order
+
+	-s, --search
+	lists all athletes from the specified country. Note spelling must be exact; use the -c flag to view all countries. Additional country search string is required along with flag.
+
+	-c, --countries
+	lists all countries
+
+
+AUTHOR  
+    Written by Robbie Young
