@@ -4,6 +4,6 @@
 \copy games from 'games.csv' DELIMITER ',' CSV NULL as 'NULL'
 \copy seasons from 'seasons.csv' DELIMITER ',' CSV NULL as 'NULL'
 \copy events from 'events.csv' DELIMITER ',' CSV NULL as 'NULL'
-\copy event_names from 'event_names.csv' DELIMITER ',' CSV NULL as 'NULL'
+\copy sports from 'sports.csv' DELIMITER ',' CSV NULL as 'NULL'
 \copy medals from 'medals.csv' DELIMITER ',' CSV NULL as 'NULL'
 \copy super_table from 'super_table.csv' DELIMITER ',' CSV NULL as 'NULL'

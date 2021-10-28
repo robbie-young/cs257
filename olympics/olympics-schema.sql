@@ -23,7 +23,7 @@ CREATE TABLE games(
     id SERIAL,
     title TEXT,
     year INT,
-    season_id TEXT,
+    season_id INT,
     city TEXT
 );
 
@@ -38,9 +38,9 @@ CREATE TABLE events(
     sport_id INT
 );
 
-CREATE TABLE event_names(
+CREATE TABLE sports(
     id SERIAL,
-    event TEXT
+    sport TEXT
 );
 
 CREATE TABLE medals(

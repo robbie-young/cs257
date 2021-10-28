@@ -14,7 +14,7 @@ noc_regions_dict = {} # {'team_name|noc|region' : id}
 games_dict = {} # {'title|year|season_id|city' : id}
 seasons_dict = {} # {'season' : id}
 events_dict = {} # {'event|sport_id' : id}
-event_names_dict = {} # {'event_name' : id}
+sports_dict = {} # {'event_name' : id}
 medals_dict = {} # {'medal' : id}
 super_table_dict = {} # {'athlete_id|noc_region_id|game_id|event_id|medal|id' : 1} only dictionary which does not check for duplicate entries
 
@@ -31,7 +31,7 @@ def create_files(): # either creates the file if not found in cd, or clears the 
         file.truncate()
     with open('events.csv', 'w') as file:
         file.truncate()
-    with open('event_names.csv', 'w') as file:
+    with open('sports.csv', 'w') as file:
         file.truncate()
     with open('medals.csv', 'w') as file:
         file.truncate()
@@ -59,7 +59,7 @@ def load(csv_file_name):
     write_to('games.csv', games_dict)
     write_to('seasons.csv', seasons_dict)
     write_to('events.csv', events_dict)
-    write_to('event_names.csv', event_names_dict)
+    write_to('sports.csv', sports_dict)
     write_to('medals.csv', medals_dict)
     write_to('super_table.csv', super_table_dict)
 
@@ -128,12 +128,12 @@ def populate_event(sport, event):
     events_dict[data] = id
     return id
 
-def populate_sport_name(event):
-    if event in event_names_dict:
-        return event_names_dict[event]
+def populate_sport_name(sport):
+    if sport in sports_dict:
+        return sports_dict[sport]
     
-    id = len(event_names_dict) + 1
-    event_names_dict[event] = id
+    id = len(sports_dict) + 1
+    sports_dict[sport] = id
     return id
 
 def populate_medal(medal):

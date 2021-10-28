@@ -20,7 +20,7 @@ def main():
     clear('games.csv')
     clear('seasons.csv')
     clear('events.csv')
-    clear('event_names.csv')
+    clear('sports.csv')
     clear('medals.csv')
     clear('super_table.csv')
     
