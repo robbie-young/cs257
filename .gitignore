@@ -1,11 +1,17 @@
 # Ignore all
 *
 
-# Include some files
+# Include some files, exclude some
 !README.md
 !.gitignore
 !*/
 
-# Include some folders, exclude specifically some files
-!books/*!DS_Store
-!olympics/*!DS_Store
+# Include some folders
+!books/*
+!olympics/*
+!webapp/*
+
+# Wait nevermind I don't want these
+olympics/config.py
+olympics/.DS_Store
+books/.DS_Store
